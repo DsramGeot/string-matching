@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class BitStringHTMLGenerator {
     public static void main(String[] args) {
@@ -21,12 +22,13 @@ public class BitStringHTMLGenerator {
             cleanUp.close();
 
             FileWriter writer = new FileWriter(file);
+            StringBuilder str = new StringBuilder();
+            int binary = 0;
 
-            
-            for(int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++) {
 
+                str.append(binary);
             }
-
 
             writer.close();
         } catch (IOException e) {
