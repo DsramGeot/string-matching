@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class StringMatching {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         if (args.length != 2) {
             System.out.println("HTML file path and key is not provided!");
             System.exit(1);
