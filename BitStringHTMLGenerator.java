@@ -18,23 +18,26 @@ public class BitStringHTMLGenerator {
 
         File file = new File("BitString.html");
         try {
-            FileWriter cleanUp = new FileWriter(file, false);
-            cleanUp.close();
-
             FileWriter writer = new FileWriter(file);
             StringBuilder str = new StringBuilder();
+            Random random = new Random();
             int binary = 0;
 
+            str.append("<HTML><BODY>");
             for (int i = 0; i < length; i++) {
-
+                
+                if (i % 400 == 0)
+                    str.append("\n");
+                binary = random.nextInt(2);
                 str.append(binary);
             }
+            str.append("\n</BODY></HTML>");
 
+            writer.write(str.toString());
             writer.close();
         } catch (IOException e) {
             System.out.println("File could not be created!");
             System.exit(1);
         }
-
     }
 }
