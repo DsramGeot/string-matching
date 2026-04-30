@@ -17,7 +17,7 @@ public class StringMatching {
             String key = args[1];
             ArrayList<Integer> list = new ArrayList<>();
             String inputText;
-            int[] measurements = { 0, 0, 0 }; // 0 for numberOfOccurances, 1 for numberOfComparisons, 2 for runtime
+            int[] measurements = { 0, 0}; // 0 for numberOfOccurances, 1 for numberOfComparisons
             Scanner input = new Scanner(htmlFile);
 
             while (input.hasNextLine()) {
@@ -26,9 +26,10 @@ public class StringMatching {
                 //highlighter(list, inputText, key);
             }
 
+            long runtimeInMilliseconds = BruteForce.runtime / 1000000;
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
-            System.out.println("Runtime: " + measurements[2] + "ms");
+            System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
             input.close();
 
         } catch (FileNotFoundException e) {
