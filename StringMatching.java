@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class StringMatching {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("HTML file path and key is not provided!");
             System.exit(1);
@@ -14,18 +14,17 @@ public class StringMatching {
 
         try {
             File htmlFile = new File(args[0]);
-
-            Scanner input = new Scanner(htmlFile);
-            String inputText = input.nextLine();
             String key = args[1];
-
-            int inputLength = inputText.length();
-            String refinedInput = inputText.substring(12, inputLength - 14);
-
             ArrayList<Integer> list = new ArrayList<>();
-            int[] measurements = {0,0,0}; // 0 for numberOfOccurances, 1 for numberOfComparisons, 2 for runtime
-            BruteForce.bruteForceSearch(list, measurements, refinedInput, key);
-            highlighter(list, refinedInput, key);
+            String inputText;
+            int[] measurements = { 0, 0, 0 }; // 0 for numberOfOccurances, 1 for numberOfComparisons, 2 for runtime
+            Scanner input = new Scanner(htmlFile);
+
+            while (input.hasNextLine()) {
+                inputText = input.nextLine();
+                BruteForce.bruteForceSearch(list, measurements, inputText, key);
+                //highlighter(list, inputText, key);
+            }
 
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
