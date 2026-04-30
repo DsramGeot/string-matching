@@ -40,6 +40,7 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = BruteForce.runtime / 1000000;
             } else if (choice == 1) { // Horspool
+                Horspool.shiftTable = Horspool.generateTable(key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
                     Horspool.HorspoolSearch(list, measurements, inputText, key);
