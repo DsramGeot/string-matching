@@ -22,6 +22,10 @@ public class BitStringHTMLGenerator {
 
             FileWriter writer = new FileWriter(file);
 
+            
+            for(int i = 0; i < length; i++) {
+
+            }
 
 
             writer.close();

@@ -30,7 +30,7 @@ public class StringMatching {
             cleanUp.close();
 
             FileWriter writer = new FileWriter(updated, true);
-
+            long runtimeInMilliseconds = 0;
             if (choice == 0) { // Brute force
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
@@ -38,6 +38,7 @@ public class StringMatching {
                     highlighter(writer, list, inputText, key);
                     list.clear();
                 }
+                runtimeInMilliseconds = BruteForce.runtime / 1000000;
             } else if (choice == 1) { // Horspool
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
@@ -46,6 +47,7 @@ public class StringMatching {
                     // Horspool.showShiftTable();
                     list.clear();
                 }
+                runtimeInMilliseconds = Horspool.runtime / 1000000;
             } else if (choice == 2) { // Boyer-Moore
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
@@ -54,6 +56,7 @@ public class StringMatching {
                     // BoyerMoore.showTables();
                     list.clear();
                 }
+                // runtimeInMilliseconds = BoyerMoore.runtime / 1000000;
             } else {
                 System.out.println("Invalid algorithm choice!");
                 System.exit(1);
@@ -62,7 +65,6 @@ public class StringMatching {
             writer.close();
             input.close();
 
-            long runtimeInMilliseconds = BruteForce.runtime / 1000000;
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
