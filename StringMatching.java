@@ -17,30 +17,41 @@ public class StringMatching {
             String key = args[1];
             ArrayList<Integer> list = new ArrayList<>();
             String inputText;
-            int[] measurements = { 0, 0}; // 0 for numberOfOccurances, 1 for numberOfComparisons
+            int[] measurements = { 0, 0 }; // 0 for numberOfOccurances, 1 for numberOfComparisons
             Scanner input = new Scanner(htmlFile);
+
+            File updated = new File("highlighted_file.html");
+            
+            FileWriter cleanUp = new FileWriter(updated, false);
+            cleanUp.close();
+
+            FileWriter writer = new FileWriter(updated, true);
 
             while (input.hasNextLine()) {
                 inputText = input.nextLine();
                 BruteForce.bruteForceSearch(list, measurements, inputText, key);
-                //highlighter(list, inputText, key);
+                highlighter(writer, list, inputText, key);
+                list.clear();
             }
+            writer.close();
+            input.close();
 
             long runtimeInMilliseconds = BruteForce.runtime / 1000000;
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
-            input.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
             e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Output file could not be created!");
+            e.printStackTrace();
         }
     }
 
-    public static void highlighter(ArrayList<Integer> list, String pattern, String key) {
+    public static void highlighter(FileWriter writer, ArrayList<Integer> list, String pattern, String key) {
 
-        File updated = new File("highlighted_file.html");
         int shift = 0;
         int keyLength = key.length();
 
@@ -56,11 +67,9 @@ public class StringMatching {
         }
 
         try {
-            FileWriter writer = new FileWriter(updated);
-            writer.write("<HTML><BODY>" + strBuild.toString() + "</BODY></HTML>");
-            writer.close();
+            writer.write(strBuild.toString() + "\n");
         } catch (IOException e) {
-            System.out.println("File creation failed!");
+            System.out.println("File could not be edited!");
             e.printStackTrace();
         }
     }

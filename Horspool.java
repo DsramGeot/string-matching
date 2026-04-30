@@ -8,13 +8,14 @@ public class Horspool {
         HashMap<Character, Integer> shiftTable = new HashMap<Character, Integer>();
         int keyLength = key.length();
 
-        for (int i = keyLength - 2; i <= 0; i--) {
+        for (int i = keyLength - 2; 0 <= i; i--) {
             if (shiftTable.containsKey(key.charAt(i))) {
-                break;
+                continue;
             } else {
                 shiftTable.put(key.charAt(i), keyLength - i - 1);
             }
         }
+        
 
     }
 
