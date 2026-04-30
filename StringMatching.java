@@ -5,34 +5,60 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+// args[2] -> 0 - BruteForce, 1 - Horspool, 2 - Boyer Moore
+
 public class StringMatching {
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("HTML file path and key is not provided!");
+        if (args.length != 3) {
+            System.out.println("HTML file path, key and algorithm choice is not provided!");
             System.exit(1);
         }
 
         try {
             File htmlFile = new File(args[0]);
             String key = args[1];
+            int choice = Integer.parseInt(args[2]);
+
             ArrayList<Integer> list = new ArrayList<>();
             String inputText;
             int[] measurements = { 0, 0 }; // 0 for numberOfOccurances, 1 for numberOfComparisons
             Scanner input = new Scanner(htmlFile);
 
             File updated = new File("highlighted_file.html");
-            
+
             FileWriter cleanUp = new FileWriter(updated, false);
             cleanUp.close();
 
             FileWriter writer = new FileWriter(updated, true);
 
-            while (input.hasNextLine()) {
-                inputText = input.nextLine();
-                BruteForce.bruteForceSearch(list, measurements, inputText, key);
-                highlighter(writer, list, inputText, key);
-                list.clear();
+            if (choice == 0) { // Brute force
+                while (input.hasNextLine()) {
+                    inputText = input.nextLine();
+                    BruteForce.bruteForceSearch(list, measurements, inputText, key);
+                    highlighter(writer, list, inputText, key);
+                    list.clear();
+                }
+            } else if (choice == 1) { // Horspool
+                while (input.hasNextLine()) {
+                    inputText = input.nextLine();
+                    Horspool.HorspoolSearch(list, measurements, inputText, key);
+                    highlighter(writer, list, inputText, key);
+                    // Horspool.showShiftTable();
+                    list.clear();
+                }
+            } else if (choice == 2) { // Boyer-Moore
+                while (input.hasNextLine()) {
+                    inputText = input.nextLine();
+                    // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
+                    highlighter(writer, list, inputText, key);
+                    // BoyerMoore.showTables();
+                    list.clear();
+                }
+            } else {
+                System.out.println("Invalid algorithm choice!");
+                System.exit(1);
             }
+
             writer.close();
             input.close();
 
@@ -59,11 +85,15 @@ public class StringMatching {
         for (int i = 0; i < list.size(); i++) {
             int index = list.get(i);
 
-            strBuild.insert(index + shift, "<mark>");
-            shift += 6;
+            if (!list.contains(index - 1)) {
+                strBuild.insert(index + shift, "<mark>");
+                shift += 6;
+            }
 
-            strBuild.insert(index + shift + keyLength, "</mark>");
-            shift += 7;
+            if (!list.contains(index + 1)) {
+                strBuild.insert(index + shift + keyLength, "</mark>");
+                shift += 7;
+            }
         }
 
         try {
