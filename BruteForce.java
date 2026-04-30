@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class BruteForce {
+    public static long runtime = 0;
     public static void bruteForceSearch(ArrayList<Integer> list, int[] measurements, String pattern, String key) {
         int patternLength = pattern.length();
         int keyLength = key.length();
@@ -21,7 +22,7 @@ public class BruteForce {
             }
         }
         long endTime = System.nanoTime();
-        measurements[2] = (int) ((endTime - startTime) / 1000000);
+        runtime += endTime - startTime;
         return;
     }
 }

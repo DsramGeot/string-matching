@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class StringMatching {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("HTML file path and key is not provided!");
             System.exit(1);
@@ -14,33 +14,44 @@ public class StringMatching {
 
         try {
             File htmlFile = new File(args[0]);
-
-            Scanner input = new Scanner(htmlFile);
-            String inputText = input.nextLine();
             String key = args[1];
-
-            int inputLength = inputText.length();
-            String refinedInput = inputText.substring(12, inputLength - 14);
-
             ArrayList<Integer> list = new ArrayList<>();
-            int[] measurements = {0,0,0}; // 0 for numberOfOccurances, 1 for numberOfComparisons, 2 for runtime
-            BruteForce.bruteForceSearch(list, measurements, refinedInput, key);
-            highlighter(list, refinedInput, key);
+            String inputText;
+            int[] measurements = { 0, 0 }; // 0 for numberOfOccurances, 1 for numberOfComparisons
+            Scanner input = new Scanner(htmlFile);
 
+            File updated = new File("highlighted_file.html");
+            
+            FileWriter cleanUp = new FileWriter(updated, false);
+            cleanUp.close();
+
+            FileWriter writer = new FileWriter(updated, true);
+
+            while (input.hasNextLine()) {
+                inputText = input.nextLine();
+                BruteForce.bruteForceSearch(list, measurements, inputText, key);
+                highlighter(writer, list, inputText, key);
+                list.clear();
+            }
+            writer.close();
+            input.close();
+
+            long runtimeInMilliseconds = BruteForce.runtime / 1000000;
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
-            System.out.println("Runtime: " + measurements[2] + "ms");
-            input.close();
+            System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
             e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Output file could not be created!");
+            e.printStackTrace();
         }
     }
 
-    public static void highlighter(ArrayList<Integer> list, String pattern, String key) {
+    public static void highlighter(FileWriter writer, ArrayList<Integer> list, String pattern, String key) {
 
-        File updated = new File("highlighted_file.html");
         int shift = 0;
         int keyLength = key.length();
 
@@ -56,11 +67,9 @@ public class StringMatching {
         }
 
         try {
-            FileWriter writer = new FileWriter(updated);
-            writer.write("<HTML><BODY>" + strBuild.toString() + "</BODY></HTML>");
-            writer.close();
+            writer.write(strBuild.toString() + "\n");
         } catch (IOException e) {
-            System.out.println("File creation failed!");
+            System.out.println("File could not be edited!");
             e.printStackTrace();
         }
     }
