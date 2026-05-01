@@ -219,10 +219,4 @@ public class StringMatching {
         }
         return -1;
     }
-
-    public static void shiftList(ArrayList<Integer> list, int shift) {
-        int size = list.size();
-        for (int i = 0; i < size; i++)
-            list.set(i, list.get(i) + shift);
-    }
 }
