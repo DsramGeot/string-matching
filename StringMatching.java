@@ -80,6 +80,13 @@ public class StringMatching {
             System.out.println("Output file could not be created!");
             e.printStackTrace();
         }
+
+        String pattern = "ABABCA";
+        int[] gs = getGoodSuffixTable(pattern);
+
+        for (int i = 0; i < gs.length; i++) {
+            System.out.println("gs[" + i + "] = " + gs[i]);
+        }
     }
 
     public static void highlighter(BufferedWriter writer, ArrayList<Integer> list, String pattern, String key) {
@@ -123,25 +130,63 @@ public class StringMatching {
         return shiftTable;
     }
 
-    public static HashMap<Integer, Integer> getGoodSuffixTable(String key) {
-        HashMap<Integer, Integer> goodSuffix = new HashMap<Integer, Integer>();
+    public static int[] getGoodSuffixTable(String key) {
+        int m = key.length();
+        int[] goodSuffix = new int[m];
+        int[] suffix = new int[m];
 
-        // Implement good suffix table here
+        buildSuffixArray(key, suffix);
 
+        for (int i = 0; i < m; i++) {
+            goodSuffix[i] = m;
+        }
+
+        for (int i = m - 1; i >= 0; i--) {
+            if (suffix[i] == i + 1) {
+
+                int shift = m - 1 - i;
+
+                for (int j = 0; j < shift; j++) {
+                    if (goodSuffix[j] == m) {
+                        goodSuffix[j] = shift;
+                    }
+                }
+            }
+        }
+
+        // suffix doesnt match entirely so we check if a part of it matches with prefix
+        for (int i = 0; i <= m - 2; i++) {
+            goodSuffix[m - 1 - suffix[i]] = m - 1 - i;
+        }
 
         return goodSuffix;
+
     }
-    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key){
-        
+
+    public static void buildSuffixArray(String key, int[] suffix) {
+        int m = key.length();
+        suffix[m - 1] = m;
+
+        for (int i = m - 2; i >= 0; i--) {
+            int j = i;
+            // one goes from j to 0 other goes from the end to the left
+            while (j >= 0 && key.charAt(j) == key.charAt(m - 1 - (i - j))) {
+                j--;
+            }
+            suffix[i] = i - j;
+        }
+    }
+
+    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
+
         System.out.println("--Bad Symbol Shift Table-- ");
         System.out.println(" Char | Shift ");
         System.out.println("------|-------");
-        
-        
+
         for (Character entry : shiftTable.keySet()) {
-            System.out.println("  "+entry+"   |   "+shiftTable.get(entry));
-            
+            System.out.println("  " + entry + "   |   " + shiftTable.get(entry));
+
         }
-        System.out.println(" N/A  |   "+key.length() );
+        System.out.println(" N/A  |   " + key.length());
     }
 }
