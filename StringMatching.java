@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // args[2] -> 0 - BruteForce, 1 - Horspool, 2 - Boyer Moore
 
@@ -40,7 +41,7 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = BruteForce.runtime / 1000000;
             } else if (choice == 1) { // Horspool
-                Horspool.shiftTable = Horspool.generateTable(key);
+                Horspool.shiftTable = getBadSymbolTable(key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
                     Horspool.HorspoolSearch(list, measurements, inputText, key);
@@ -105,5 +106,26 @@ public class StringMatching {
             System.out.println("File could not be edited!");
             e.printStackTrace();
         }
+    }
+
+    public static HashMap<Character, Integer> getBadSymbolTable(String key) {
+        HashMap<Character, Integer> shiftTable = new HashMap<Character, Integer>();
+        int keyLength = key.length();
+        for (int i = keyLength - 2; 0 <= i; i--) {
+            if (shiftTable.containsKey(key.charAt(i)))
+                continue;
+            else
+                shiftTable.put(key.charAt(i), keyLength - i - 1);
+        }
+        return shiftTable;
+    }
+
+    public static HashMap<Integer, Integer> getGoodSuffixTable(String key) {
+        HashMap<Integer, Integer> goodSuffix = new HashMap<Integer, Integer>();
+
+        // Implement good suffix table here
+
+
+        return goodSuffix;
     }
 }
