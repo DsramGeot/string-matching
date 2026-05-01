@@ -11,12 +11,11 @@ import java.util.HashMap;
 
 public class StringMatching {
     public static void main(String[] args) {
-        
+
         Runtime runtime = Runtime.getRuntime();
         System.gc();
         long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
-        
-        
+
         if (args.length != 3) {
             System.out.println("HTML file path, key and algorithm choice is not provided!");
             System.exit(1);
@@ -40,13 +39,24 @@ public class StringMatching {
             BufferedWriter writer = new BufferedWriter(new FileWriter(updated, true));
             long runtimeInMilliseconds = 0;
 
-            
-
+            int start = 0;
+            int end = 0;
 
             if (choice == 0) { // Brute force
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    BruteForce.bruteForceSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        BruteForce.bruteForceSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
                     list.clear();
                 }
@@ -56,7 +66,18 @@ public class StringMatching {
                 tablePrinter(Horspool.shiftTable, key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    Horspool.HorspoolSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        Horspool.HorspoolSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
                     list.clear();
                 }
@@ -64,7 +85,18 @@ public class StringMatching {
             } else if (choice == 2) { // Boyer-Moore
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
                     // BoyerMoore.showTables();
                     list.clear();
@@ -85,7 +117,7 @@ public class StringMatching {
             System.out.printf("Number of occurances: %,d%n", measurements[0]);
             System.out.printf("Number of comparisons: %,d%n", measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
-            System.out.printf("Memory used: %.3f MB %n", memoryUsedMB);
+            System.out.printf("Memory used: %.2f MB %n", memoryUsedMB);
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
@@ -142,20 +174,55 @@ public class StringMatching {
 
         // Implement good suffix table here
 
-
         return goodSuffix;
     }
-    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key){
-        
+
+    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
+
         System.out.println("--Bad Symbol Shift Table-- ");
         System.out.println(" Char | Shift ");
         System.out.println("------|-------");
-        
-        
+
         for (Character entry : shiftTable.keySet()) {
-            System.out.println("  "+entry+"   |   "+shiftTable.get(entry));
-            
+            System.out.println("  " + entry + "   |   " + shiftTable.get(entry));
+
         }
-        System.out.println(" N/A  |   "+key.length() );
+        System.out.println(" N/A  |   " + key.length());
+    }
+
+    public static int patternStart(String pattern) { // starting of the visible element
+        boolean lookForMatch = false;
+        int length = pattern.length();
+        for (int i = 0; i < length; i++) {
+            char ch = pattern.charAt(i);
+            if (ch == '<')
+                lookForMatch = true;
+            else if (ch == '>')
+                lookForMatch = false;
+            else if (!lookForMatch && !Character.isWhitespace(ch))
+                return i;
+        }
+        return pattern.length();
+    }
+
+    public static int patternEnd(String pattern) { // ending of the visible element (inclusive)
+        boolean lookForMatch = false;
+        int length = pattern.length();
+        for (int i = length - 1; i >= 0; i--) {
+            char ch = pattern.charAt(i);
+            if (ch == '>')
+                lookForMatch = true;
+            else if (ch == '<')
+                lookForMatch = false;
+            else if (!lookForMatch && !Character.isWhitespace(ch))
+                return i;
+        }
+        return -1;
+    }
+
+    public static void shiftList(ArrayList<Integer> list, int shift) {
+        int size = list.size();
+        for (int i = 0; i < size; i++)
+            list.set(i, list.get(i) + shift);
     }
 }
