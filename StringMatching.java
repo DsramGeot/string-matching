@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class StringMatching {
             FileWriter cleanUp = new FileWriter(updated, false);
             cleanUp.close();
 
-            FileWriter writer = new FileWriter(updated, true);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(updated, true));
             long runtimeInMilliseconds = 0;
             if (choice == 0) { // Brute force
                 while (input.hasNextLine()) {
@@ -80,21 +81,22 @@ public class StringMatching {
         }
     }
 
-    public static void highlighter(FileWriter writer, ArrayList<Integer> list, String pattern, String key) {
+    public static void highlighter(BufferedWriter writer, ArrayList<Integer> list, String pattern, String key) {
 
         int shift = 0;
         int keyLength = key.length();
+        int listSize = list.size();
 
         StringBuilder strBuild = new StringBuilder(pattern);
-        for (int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < listSize; i++) {
             int index = list.get(i);
 
-            if (!list.contains(index - 1)) {
+            if (i == 0 || !(list.get(i - 1) == index - 1)) {
                 strBuild.insert(index + shift, "<mark>");
                 shift += 6;
             }
 
-            if (!list.contains(index + 1)) {
+            if (i == (listSize - 1) || !(list.get(i + 1) == index + 1)) {
                 strBuild.insert(index + shift + keyLength, "</mark>");
                 shift += 7;
             }
