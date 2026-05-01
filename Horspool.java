@@ -35,17 +35,4 @@ public class Horspool {
         long endTime = System.nanoTime();
         runtime += endTime - startTime;
     }
-
-    public static HashMap<Character, Integer> generateTable(String key) {
-
-        HashMap<Character, Integer> shiftTable = new HashMap<Character, Integer>();
-        int keyLength = key.length();
-        for (int i = keyLength - 2; 0 <= i; i--) {
-            if (shiftTable.containsKey(key.charAt(i)))
-                continue;
-            else
-                shiftTable.put(key.charAt(i), keyLength - i - 1);
-        }
-        return shiftTable;
-    }
 }
