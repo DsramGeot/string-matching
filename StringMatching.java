@@ -82,8 +82,8 @@ public class StringMatching {
             writer.close();
             input.close();
 
-            System.out.println("Number of occurances: " + measurements[0]);
-            System.out.println("Number of comparisons: " + measurements[1]);
+            System.out.printf("Number of occurances: %,d%n", measurements[0]);
+            System.out.printf("Number of comparisons: %,d%n", measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
             System.out.printf("Memory used: %.3f MB %n", memoryUsedMB);
 
