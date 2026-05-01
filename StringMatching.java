@@ -43,6 +43,7 @@ public class StringMatching {
                 runtimeInMilliseconds = BruteForce.runtime / 1000000;
             } else if (choice == 1) { // Horspool
                 Horspool.shiftTable = getBadSymbolTable(key);
+                tablePrinter(Horspool.shiftTable, key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
                     Horspool.HorspoolSearch(list, measurements, inputText, key);
@@ -129,5 +130,18 @@ public class StringMatching {
 
 
         return goodSuffix;
+    }
+    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key){
+        
+        System.out.println("--Bad Symbol Shift Table-- ");
+        System.out.println(" Char | Shift ");
+        System.out.println("------|-------");
+        
+        
+        for (Character entry : shiftTable.keySet()) {
+            System.out.println("  "+entry+"   |   "+shiftTable.get(entry));
+            
+        }
+        System.out.println(" N/A  |   "+key.length() );
     }
 }
