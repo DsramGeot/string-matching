@@ -11,6 +11,12 @@ import java.util.HashMap;
 
 public class StringMatching {
     public static void main(String[] args) {
+        
+        Runtime runtime = Runtime.getRuntime();
+        System.gc();
+        long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+        
+        
         if (args.length != 3) {
             System.out.println("HTML file path, key and algorithm choice is not provided!");
             System.exit(1);
@@ -33,6 +39,10 @@ public class StringMatching {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(updated, true));
             long runtimeInMilliseconds = 0;
+
+            
+
+
             if (choice == 0) { // Brute force
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
@@ -48,7 +58,6 @@ public class StringMatching {
                     inputText = input.nextLine();
                     Horspool.HorspoolSearch(list, measurements, inputText, key);
                     highlighter(writer, list, inputText, key);
-                    // Horspool.showShiftTable();
                     list.clear();
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
@@ -66,12 +75,17 @@ public class StringMatching {
                 System.exit(1);
             }
 
+            long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+            long memoryUsedBytes = memoryAfter - memoryBefore;
+            double memoryUsedMB = memoryUsedBytes / (1024.0 * 1024.0);
+
             writer.close();
             input.close();
 
             System.out.println("Number of occurances: " + measurements[0]);
             System.out.println("Number of comparisons: " + measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
+            System.out.printf("Memory used: %.3f MB %n", memoryUsedMB);
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
