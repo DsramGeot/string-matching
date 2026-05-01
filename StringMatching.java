@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class StringMatching {
     public static void main(String[] args) {
+
         if (args.length != 3) {
             System.out.println("HTML file path, key and algorithm choice is not provided!");
             System.exit(1);
@@ -53,14 +54,15 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
             } else if (choice == 2) { // Boyer-Moore
+                BoyerMoore.shiftTable = getBadSymbolTable(key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
+                    BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
                     highlighter(writer, list, inputText, key);
                     // BoyerMoore.showTables();
                     list.clear();
                 }
-                // runtimeInMilliseconds = BoyerMoore.runtime / 1000000;
+                runtimeInMilliseconds = BoyerMoore.runtime / 1000000;
             } else {
                 System.out.println("Invalid algorithm choice!");
                 System.exit(1);
@@ -80,13 +82,13 @@ public class StringMatching {
             System.out.println("Output file could not be created!");
             e.printStackTrace();
         }
-
-        String pattern = "ABABCA";
-        int[] gs = getGoodSuffixTable(pattern);
-
-        for (int i = 0; i < gs.length; i++) {
-            System.out.println("gs[" + i + "] = " + gs[i]);
-        }
+        /*
+         * String pattern = "ABCAABBACA";
+         * int[] gs = getGoodSuffixTable(pattern);
+         * 
+         * for (int i = 0; i < gs.length; i++) {
+         * System.out.println("gs[" + i + "] = " + gs[i]);
+         */
     }
 
     public static void highlighter(BufferedWriter writer, ArrayList<Integer> list, String pattern, String key) {
@@ -132,12 +134,12 @@ public class StringMatching {
 
     public static int[] getGoodSuffixTable(String key) {
         int m = key.length();
-        int[] goodSuffix = new int[m];
+        int[] goodSuffix = new int[m + 1];
         int[] suffix = new int[m];
 
         buildSuffixArray(key, suffix);
 
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i <= m; i++) {
             goodSuffix[i] = m;
         }
 
