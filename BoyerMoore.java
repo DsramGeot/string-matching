@@ -38,7 +38,9 @@ public class BoyerMoore {
                 shiftamount = keyLength;
             }
 
-            i += Math.max(shiftamount, goodSuffix[j + 1]);
+            int goodSuffixShift = (j < 0) ? goodSuffix[0] : goodSuffix[j];
+            
+            i += Math.max(shiftamount, goodSuffixShift);
         }
         long endTime = System.nanoTime();
         runtime += endTime - startTime;
