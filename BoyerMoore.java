@@ -6,11 +6,6 @@ public class BoyerMoore {
     public static HashMap<Character, Integer> badCharTable;
     public static int[] goodSuffix;
 
-    public static void initializeTables(String key) {
-        badCharTable = StringMatching.getBadCharTable(key);
-        goodSuffix = StringMatching.getGoodSuffixTable(key);
-    }
-
     public static void BoyerMooreSearch(ArrayList<Integer> list, int[] measurements, String pattern, String key,
             int start, int end) {
 

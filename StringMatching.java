@@ -84,7 +84,8 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
             } else if (choice == 2) { // Boyer-Moore
-                BoyerMoore.initializeTables(key);
+                BoyerMoore.badCharTable = StringMatching.getBadSymbolTable(key);
+                BoyerMoore.goodSuffix = StringMatching.getGoodSuffixTable(key);
                 tablePrinter(BoyerMoore.badCharTable, key);
                 printGoodSuffixTable(BoyerMoore.goodSuffix, key);
 
@@ -194,15 +195,6 @@ public class StringMatching {
                 shiftTable.put(key.charAt(i), keyLength - i - 1);
         }
         return shiftTable;
-    }
-
-    public static HashMap<Character, Integer> getBadCharTable(String key) {
-        HashMap<Character, Integer> lastOcc = new HashMap<>();
-        int keyLength = key.length();
-        for (int i = 0; i < keyLength; i++) {
-            lastOcc.put(key.charAt(i), i);
-        }
-        return lastOcc;
     }
 
     public static int[] getGoodSuffixTable(String key) {
