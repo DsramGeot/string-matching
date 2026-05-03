@@ -265,7 +265,7 @@ public class StringMatching {
         int m = key.length();
         for (int i = 0; i < m; i++) {
             String substring = key.substring(m - 1 - i);
-            System.out.printf("   %-10s |   %2d%n", substring, goodSuffix[i]);
+            System.out.printf("  %-8s |   %2d%n", substring, goodSuffix[i]);
         }
     }
 
