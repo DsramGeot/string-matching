@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,6 +119,25 @@ public class StringMatching {
             System.out.printf("Number of comparisons: %,d%n", measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
             System.out.printf("Memory used: %.2f MB %n", memoryUsedMB);
+
+            
+            try (PrintWriter outputWriter = new PrintWriter(new FileWriter("output.txt", true))) {
+    
+                outputWriter.println(args[2]+"    #BruteForce, 1 - Horspool, 2 - Boyer Moore");
+                outputWriter.println(key+"    #Key searched");
+                outputWriter.println(args[0]+"    #File searched");
+                outputWriter.println(measurements[0]+"    #Occurance number");
+                outputWriter.println(measurements[1]+"    #Comparison number");
+                outputWriter.println(runtimeInMilliseconds+"    #Runtime in ms");
+                outputWriter.printf("%.2f    #Memory in MB%n", memoryUsedMB);
+                
+                outputWriter.println();
+                
+            } catch (IOException e) {
+                System.err.println("An error occurred while writing the output");
+            }
+
+
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
