@@ -246,6 +246,7 @@ public class StringMatching {
 
     public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
 
+
         System.out.println("--Bad Symbol Shift Table-- ");
         System.out.println(" Char | Shift ");
         System.out.println("------|-------");
@@ -265,7 +266,10 @@ public class StringMatching {
         int m = key.length();
         for (int i = 0; i < m; i++) {
             String substring = key.substring(m - 1 - i);
-            System.out.printf("  %-8s |   %2d%n", substring, goodSuffix[i]);
+            int k = i + 1;
+            int j = m - 1 - k;
+            int shift = (j < 0) ? goodSuffix[0] : goodSuffix[j];
+            System.out.printf("  %-8s |   %2d%n", substring, shift);
         }
     }
 
