@@ -84,9 +84,8 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
             } else if (choice == 2) { // Boyer-Moore
-                BoyerMoore.goodSuffix = getGoodSuffixTable(key);
-                BoyerMoore.shiftTable = getBadSymbolTable(key);
-                tablePrinter(BoyerMoore.shiftTable, key);
+                BoyerMoore.initializeTables(key);
+                tablePrinter(BoyerMoore.badCharTable, key);
                 printGoodSuffixTable(BoyerMoore.goodSuffix, key);
 
                 while (input.hasNextLine()) {
@@ -197,6 +196,15 @@ public class StringMatching {
         return shiftTable;
     }
 
+    public static HashMap<Character, Integer> getBadCharTable(String key) {
+        HashMap<Character, Integer> lastOcc = new HashMap<>();
+        int keyLength = key.length();
+        for (int i = 0; i < keyLength; i++) {
+            lastOcc.put(key.charAt(i), i);
+        }
+        return lastOcc;
+    }
+
     public static int[] getGoodSuffixTable(String key) {
         int m = key.length();
         int[] goodSuffix = new int[m + 1];
@@ -244,17 +252,17 @@ public class StringMatching {
         }
     }
 
-    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
+    public static void tablePrinter(HashMap<Character, Integer> badCharTable, String key) {
 
-        System.out.println("--Bad Symbol Shift Table-- ");
-        System.out.println(" Char | Shift ");
-        System.out.println("------|-------");
+        System.out.println("--Bad Character Last Occurrence Table-- ");
+        System.out.println(" Char | Position ");
+        System.out.println("------|----------");
 
-        for (Character entry : shiftTable.keySet()) {
-            System.out.println("  " + entry + "   |   " + shiftTable.get(entry));
+        for (Character entry : badCharTable.keySet()) {
+            System.out.println("  " + entry + "   |    " + badCharTable.get(entry));
 
         }
-        System.out.println(" N/A  |   " + key.length());
+        System.out.println(" N/A  |    -1");
     }
 
     public static void printGoodSuffixTable(int[] goodSuffix, String key) {

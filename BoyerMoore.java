@@ -3,17 +3,22 @@ import java.util.HashMap;
 
 public class BoyerMoore {
     public static long runtime = 0;
-    public static HashMap<Character, Integer> shiftTable;
+    public static HashMap<Character, Integer> badCharTable;
     public static int[] goodSuffix;
+
+    public static void initializeTables(String key) {
+        badCharTable = StringMatching.getBadCharTable(key);
+        goodSuffix = StringMatching.getGoodSuffixTable(key);
+    }
 
     public static void BoyerMooreSearch(ArrayList<Integer> list, int[] measurements, String pattern, String key,
             int start, int end) {
 
         int keyLength = key.length();
-        
-        if (keyLength > end - start + 1)
+
+        if (keyLength == 0 || keyLength > end - start + 1)
             return;
-        
+
         int searchBorder = end - keyLength + 1;
 
         long startTime = System.nanoTime();
@@ -32,14 +37,16 @@ public class BoyerMoore {
             }
 
             int shiftamount = 0;
-            if (shiftTable.containsKey(pattern.charAt(i + keyLength - 1))) {
-                shiftamount = shiftTable.get(pattern.charAt(i + keyLength - 1));
+            char textChar = pattern.charAt(i + j);
+            if (badCharTable.containsKey(textChar)) {
+                shiftamount = j - badCharTable.get(textChar);
             } else {
-                shiftamount = keyLength;
+                shiftamount = j + 1;
             }
+            shiftamount = Math.max(1, shiftamount);
 
             int goodSuffixShift = (j < 0) ? goodSuffix[0] : goodSuffix[j];
-            
+
             i += Math.max(shiftamount, goodSuffixShift);
         }
         long endTime = System.nanoTime();
