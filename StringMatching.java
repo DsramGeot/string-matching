@@ -244,17 +244,18 @@ public class StringMatching {
         }
     }
 
-    public static void tablePrinter(HashMap<Character, Integer> badCharTable, String key) {
+    public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
 
-        System.out.println("--Bad Character Last Occurrence Table-- ");
+
+        System.out.println("--Bad Symbol Shift Table-- ");
         System.out.println(" Char | Shift ");
-        System.out.println("------|----------");
+        System.out.println("------|-------");
 
-        for (Character entry : badCharTable.keySet()) {
-            System.out.println("  " + entry + "   |    " + badCharTable.get(entry));
+        for (Character entry : shiftTable.keySet()) {
+            System.out.println("  " + entry + "   |   " + shiftTable.get(entry));
 
         }
-        System.out.println(" N/A  |    -1");
+        System.out.println(" N/A  |   " + key.length());
     }
 
     public static void printGoodSuffixTable(int[] goodSuffix, String key) {
