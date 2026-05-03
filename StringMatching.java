@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,10 @@ import java.util.HashMap;
 
 public class StringMatching {
     public static void main(String[] args) {
+
+        Runtime runtime = Runtime.getRuntime();
+        System.gc();
+        long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
 
         if (args.length != 3) {
             System.out.println("HTML file path, key and algorithm choice is not provided!");
@@ -34,10 +39,25 @@ public class StringMatching {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(updated, true));
             long runtimeInMilliseconds = 0;
+
+            int start = 0;
+            int end = 0;
+
             if (choice == 0) { // Brute force
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    BruteForce.bruteForceSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        BruteForce.bruteForceSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
                     list.clear();
                 }
@@ -47,9 +67,19 @@ public class StringMatching {
                 tablePrinter(Horspool.shiftTable, key);
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    Horspool.HorspoolSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        Horspool.HorspoolSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
-                    // Horspool.showShiftTable();
                     list.clear();
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
@@ -58,6 +88,18 @@ public class StringMatching {
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
                     BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
+
+                    start = 0;
+                    end = inputText.length() - 1;
+
+                    if (inputText.indexOf('<') != -1) {
+                        start = patternStart(inputText);
+                        end = patternEnd(inputText);
+                    }
+
+                    if (start <= end)
+                        // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key, start, end);
+
                     highlighter(writer, list, inputText, key);
                     // BoyerMoore.showTables();
                     list.clear();
@@ -68,12 +110,36 @@ public class StringMatching {
                 System.exit(1);
             }
 
+            long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+            long memoryUsedBytes = memoryAfter - memoryBefore;
+            double memoryUsedMB = memoryUsedBytes / (1024.0 * 1024.0);
+
             writer.close();
             input.close();
 
-            System.out.println("Number of occurances: " + measurements[0]);
-            System.out.println("Number of comparisons: " + measurements[1]);
+            System.out.printf("Number of occurances: %,d%n", measurements[0]);
+            System.out.printf("Number of comparisons: %,d%n", measurements[1]);
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
+            System.out.printf("Memory used: %.2f MB %n", memoryUsedMB);
+
+            
+            try (PrintWriter outputWriter = new PrintWriter(new FileWriter("output.txt", true))) {
+    
+                outputWriter.println(args[2]+"    #BruteForce, 1 - Horspool, 2 - Boyer Moore");
+                outputWriter.println(key+"    #Key searched");
+                outputWriter.println(args[0]+"    #File searched");
+                outputWriter.println(measurements[0]+"    #Occurance number");
+                outputWriter.println(measurements[1]+"    #Comparison number");
+                outputWriter.println(runtimeInMilliseconds+"    #Runtime in ms");
+                outputWriter.printf("%.2f    #Memory in MB%n", memoryUsedMB);
+                
+                outputWriter.println();
+                
+            } catch (IOException e) {
+                System.err.println("An error occurred while writing the output");
+            }
+
+
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
@@ -190,5 +256,35 @@ public class StringMatching {
 
         }
         System.out.println(" N/A  |   " + key.length());
+    }
+
+    public static int patternStart(String pattern) { // starting of the visible element
+        boolean lookForMatch = false;
+        int length = pattern.length();
+        for (int i = 0; i < length; i++) {
+            char ch = pattern.charAt(i);
+            if (ch == '<')
+                lookForMatch = true;
+            else if (ch == '>')
+                lookForMatch = false;
+            else if (!lookForMatch && !Character.isWhitespace(ch))
+                return i;
+        }
+        return pattern.length();
+    }
+
+    public static int patternEnd(String pattern) { // ending of the visible element (inclusive)
+        boolean lookForMatch = false;
+        int length = pattern.length();
+        for (int i = length - 1; i >= 0; i--) {
+            char ch = pattern.charAt(i);
+            if (ch == '>')
+                lookForMatch = true;
+            else if (ch == '<')
+                lookForMatch = false;
+            else if (!lookForMatch && !Character.isWhitespace(ch))
+                return i;
+        }
+        return -1;
     }
 }
