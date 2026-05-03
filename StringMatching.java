@@ -25,6 +25,12 @@ public class StringMatching {
         try {
             File htmlFile = new File(args[0]);
             String key = args[1];
+
+            if (key.length() == 0) {
+                System.out.println("Key cannot be empty!");
+                System.exit(1);
+            }
+
             int choice = Integer.parseInt(args[2]);
 
             ArrayList<Integer> list = new ArrayList<>();
@@ -245,7 +251,6 @@ public class StringMatching {
     }
 
     public static void tablePrinter(HashMap<Character, Integer> shiftTable, String key) {
-
 
         System.out.println("--Bad Symbol Shift Table-- ");
         System.out.println(" Char | Shift ");
