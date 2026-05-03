@@ -86,7 +86,8 @@ public class StringMatching {
             } else if (choice == 2) { // Boyer-Moore
                 BoyerMoore.goodSuffix = getGoodSuffixTable(key);
                 BoyerMoore.shiftTable = getBadSymbolTable(key);
-                // tablePrinter();
+                tablePrinter(BoyerMoore.shiftTable, key);
+                printGoodSuffixTable(BoyerMoore.goodSuffix, key);
 
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
@@ -254,6 +255,18 @@ public class StringMatching {
 
         }
         System.out.println(" N/A  |   " + key.length());
+    }
+
+    public static void printGoodSuffixTable(int[] goodSuffix, String key) {
+        System.out.println("--Good Suffix Shift Table-- ");
+        System.out.println(" Substring | Shift ");
+        System.out.println("-----------|-------");
+
+        int m = key.length();
+        for (int i = 0; i < m; i++) {
+            String substring = key.substring(m - 1 - i);
+            System.out.printf("   %-10s |   %2d%n", substring, goodSuffix[i]);
+        }
     }
 
     public static int patternStart(String pattern) { // starting of the visible element
