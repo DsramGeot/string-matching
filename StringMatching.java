@@ -84,10 +84,12 @@ public class StringMatching {
                 }
                 runtimeInMilliseconds = Horspool.runtime / 1000000;
             } else if (choice == 2) { // Boyer-Moore
+                BoyerMoore.goodSuffix = getGoodSuffixTable(key);
                 BoyerMoore.shiftTable = getBadSymbolTable(key);
+                // tablePrinter();
+
                 while (input.hasNextLine()) {
                     inputText = input.nextLine();
-                    BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key);
 
                     start = 0;
                     end = inputText.length() - 1;
@@ -98,10 +100,9 @@ public class StringMatching {
                     }
 
                     if (start <= end)
-                        // BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key, start, end);
+                        BoyerMoore.BoyerMooreSearch(list, measurements, inputText, key, start, end);
 
                     highlighter(writer, list, inputText, key);
-                    // BoyerMoore.showTables();
                     list.clear();
                 }
                 runtimeInMilliseconds = BoyerMoore.runtime / 1000000;
@@ -122,24 +123,21 @@ public class StringMatching {
             System.out.println("Runtime: " + runtimeInMilliseconds + "ms");
             System.out.printf("Memory used: %.2f MB %n", memoryUsedMB);
 
-            
             try (PrintWriter outputWriter = new PrintWriter(new FileWriter("output.txt", true))) {
-    
-                outputWriter.println(args[2]+"    #BruteForce, 1 - Horspool, 2 - Boyer Moore");
-                outputWriter.println(key+"    #Key searched");
-                outputWriter.println(args[0]+"    #File searched");
-                outputWriter.println(measurements[0]+"    #Occurance number");
-                outputWriter.println(measurements[1]+"    #Comparison number");
-                outputWriter.println(runtimeInMilliseconds+"    #Runtime in ms");
+
+                outputWriter.println(args[2] + "    #BruteForce, 1 - Horspool, 2 - Boyer Moore");
+                outputWriter.println(key + "    #Key searched");
+                outputWriter.println(args[0] + "    #File searched");
+                outputWriter.println(measurements[0] + "    #Occurance number");
+                outputWriter.println(measurements[1] + "    #Comparison number");
+                outputWriter.println(runtimeInMilliseconds + "    #Runtime in ms");
                 outputWriter.printf("%.2f    #Memory in MB%n", memoryUsedMB);
-                
+
                 outputWriter.println();
-                
+
             } catch (IOException e) {
                 System.err.println("An error occurred while writing the output");
             }
-
-
 
         } catch (FileNotFoundException e) {
             System.out.println("HTML file path is wrong!");
