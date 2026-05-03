@@ -46,7 +46,10 @@ public class BoyerMoore {
             int badSymbolShift = Math.max(t1 - k, 1);
             int goodSuffixShift = goodSuffix[j];
 
-            i += Math.max(badSymbolShift, goodSuffixShift);
+            if (k == 0)
+                i += badSymbolShift;
+            else
+                i += Math.max(badSymbolShift, goodSuffixShift);
         }
         long endTime = System.nanoTime();
         runtime += endTime - startTime;
