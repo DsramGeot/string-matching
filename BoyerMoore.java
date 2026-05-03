@@ -32,11 +32,14 @@ public class BoyerMoore {
             }
 
             int shiftamount = 0;
-            char textChar = pattern.charAt(i + j);
-            if (badCharTable.containsKey(textChar)) {
-                shiftamount = j - badCharTable.get(textChar);
-            } else {
-                shiftamount = j + 1;
+            if (j >= 0) {
+                char textChar = pattern.charAt(i + j);
+                if (badCharTable.containsKey(textChar)) {
+                    shiftamount = j - badCharTable.get(textChar);
+                } else {
+                    shiftamount = j + 1;
+                }
+                shiftamount = Math.max(1, shiftamount);
             }
             shiftamount = Math.max(1, shiftamount);
 
