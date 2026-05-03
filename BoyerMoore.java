@@ -29,23 +29,24 @@ public class BoyerMoore {
             if (j < 0) {
                 measurements[0]++;
                 list.add(i);
+
+                i += goodSuffix[0];
+                continue;
             }
 
-            int shiftamount = 0;
-            if (j >= 0) {
-                char textChar = pattern.charAt(i + j);
-                if (badCharTable.containsKey(textChar)) {
-                    shiftamount = j - badCharTable.get(textChar);
-                } else {
-                    shiftamount = j + 1;
-                }
-                shiftamount = Math.max(1, shiftamount);
-            }
-            shiftamount = Math.max(1, shiftamount);
+            int k = keyLength - j - 1;
+            char ch = pattern.charAt(i + j);
+            int t1;
 
-            int goodSuffixShift = (j < 0) ? goodSuffix[0] : goodSuffix[j];
+            if (badCharTable.containsKey(ch))
+                t1 = badCharTable.get(ch);
+            else
+                t1 = keyLength;
 
-            i += Math.max(shiftamount, goodSuffixShift);
+            int badSymbolShift = Math.max(t1 - k, 1);
+            int goodSuffixShift = goodSuffix[j];
+
+            i += Math.max(badSymbolShift, goodSuffixShift);
         }
         long endTime = System.nanoTime();
         runtime += endTime - startTime;
